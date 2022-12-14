@@ -1,0 +1,60 @@
+void solve(){
+
+  vector<string>v{".&.",".&.","&.&"};
+  int n=v.size();
+  int m=v[0].size();
+  int k=3;
+  vector<int>col(m+1,0);
+  vector<int>cnt(m+1,0);
+  vector<vector<int>>res(m+1);
+  for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+        if(v[i][j]=='&'){
+            col[j+1]+=i+1; //it stores the sum of row value of all the system at column j
+            res[j+1].push_back(i+1);
+            cnt[j+1]++;   //count
+        }
+    }
+  }
+
+  int sum[m+1][m+1];  //sum[i][j] tells the pair wise sum when we are considering all elements in column[i] and all elements between column i and column i+j
+  memset(sum,0,sizeof(sum));
+
+  for(int i=1;i<=m;i++){
+    int x=cnt[i];
+    int t=0;
+    for(int j=0;j<res[i].size();j++){
+        t+=res[i][j];
+        sum[i][0]+=abs((col[i]-t)-(x-1)*res[i][j]);
+        x--;
+    }
+  }
+
+  for(int i=1;i<=m;i++){
+    for(int j=i+1;j<=m;j++){
+        int d=j-i;
+       int temp= abs(col[j]*cnt[i]- col[i]*cnt[j]) + abs(j*cnt[j]*cnt[i] - i*cnt[i]*cnt[j]);
+       sum[i][d]=temp+sum[i][d-1];
+    }
+  }
+
+  int mx=0;
+
+//suppose we are calculating all columns at dist p1 from column i then for the next column we need to calculate at distance p1-1
+
+  for(int i=1;i<=m;i++){
+    int ans=0;
+    int p1=k;
+
+    for(int j=i;j<=m;j++){
+        int u=m-j;
+        ans+= sum[j][min(u,p1)];
+        p1--;
+       if(p1<0)break;
+    }
+    mx=max(mx,ans);
+  }
+
+  cout<<mx;
+
+}

@@ -1,0 +1,66 @@
+Explanation:
+
+We will check if all characters are present in the string.
+If not, return 0, else increment answer by 1 (no modifications
+required).
+
+Quotient means removing suffix.
+Remainder means removing prefix.
+Let us assume a substring s[mini...maxi] with all the characters from 0 to 9
+present.
+
+We can remove prefixes in 0 to mini - 1 ways = mini ways
+We can remove suffixes in maxi + 1 to n - 1 ways = n - 1 - maxi ways
+Both operation can be applied (mini) * (n - 1 - maxi) ways
+Repeat same for all disjoint substrings with all the characters. Extra care needs to
+be taken for start and end.
+
+#include<bits/stdc++.h>
+using namespace std;
+
+// TC: O(n), SC: O(n)
+int noOfCombinations(string s) {
+    int n = s.length();
+    int ret = 0;
+    if ((set<char>(s.begin(), s.end())).size() == 10) ++ret; // no modifications reqd
+    else return 0;
+    vector<array<int, 2>> pos;
+    unordered_map<char, int> last;
+    for (int i = 0; i < n; ++i) {
+        last[s[i]] = i;
+        if (last.size() == 10) { // all chars exist
+            int mini = n + 1, maxi = -1;
+            for (auto x: last) {
+                mini = min(x.second, mini);
+                maxi = max(x.second, maxi);
+            }
+            pos.push_back({mini, maxi});
+            last.clear();
+        }
+    }
+    int start = 0, end = n - 1;
+    if (pos.size() > 1) {
+        end = pos[1][0];
+    }
+    for (int i = 0; i < (int)pos.size(); ++i) {
+        auto segment = pos[i];
+        // both quotient and remainder
+        int prefixLength = segment[0] - start, suffixLength = end - segment[1];
+        ret += prefixLength * suffixLength;
+        // only remainder
+        ret += prefixLength;
+        // only quotient
+        ret += suffixLength;
+        start = segment[0];
+        if (i < (int)pos.size() - 1) {
+            end = pos[i + 1][0];
+        } else {
+            end = n - 1;
+        }
+    }
+    return ret;
+}
+
+int main() {
+    cout << noOfCombinations("121234567890") << '\n';
+}

@@ -1,0 +1,23 @@
+int MinOperations(vector<int>& TargetWaterSupply) {
+        sort(TargetWaterSupply.begin() , TargetWaterSupply.end() );
+        int ans=0,maxDouble=0;
+        for(int ele : TargetWaterSupply){
+            int inc=0,multiply=0;
+            while(ele>0){
+                if(ele%2==0){
+                    multiply++;
+					ele/=2;
+                }
+                else {
+					inc++;
+					ele--;
+				}
+            }
+            if(multiply>maxDouble){
+                maxDouble=multiply;
+            }
+            else multiply=0;
+            ans+=inc+multiply;
+        }
+        return ans;
+    }

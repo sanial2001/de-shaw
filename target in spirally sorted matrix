@@ -1,0 +1,59 @@
+Q2 solution: Using a map
+
+#include<bits/stdc++.h>
+using namespace std;
+
+// TC: O(n * n * log(n)), SC: O(n * n)
+vector<int> checkElement(vector<vector<int>> nums, vector<int> queries) {
+    int n = nums.size();
+    vector<int> elems;
+    for (auto v: nums) {
+        for (auto x: v) {
+            elems.push_back(x);
+        }
+    }
+    sort(elems.begin(), elems.end());
+    unordered_map<int, array<int, 2>> idx2pos;
+    // taken from https://csposts.com/posts/generate-spiral-matrix
+    int rowStart = 0, rowEnd = n - 1, columnStart = 0, columnEnd = n - 1;
+    int cur = 0;
+    while (rowStart <= rowEnd and columnStart <= columnEnd) {
+        // traversing from top left to top right (first row in the layer)
+        for (int c = columnStart; c <= columnEnd; ++c) {
+            idx2pos[elems[cur++]] = {rowStart, c};
+        }
+        ++rowStart;
+        // traversing from top right to bottom right (last column in the layer)
+        for (int r = rowStart; r <= rowEnd; ++r) {
+            idx2pos[elems[cur++]] = {r, columnEnd};
+        }
+        --columnEnd;
+        // traversing from bottom right to bottom left (last row in the layer)
+        for (int c = columnEnd; c >= columnStart; --c) {
+            idx2pos[elems[cur++]] = {rowEnd, c};
+        }
+        --rowEnd;
+        // traversing from bottom left to top left (first column in the layer)
+        for (int r = rowEnd; r >= rowStart; --r) {
+            idx2pos[elems[cur++]] = {r, columnStart};
+        }
+        ++columnStart;
+    }
+    vector<int> ret;
+    for (int q: queries) {
+        // position of q in the spiral matrix
+        auto spiralPos = idx2pos[q];
+        // element in `spiralPos` in the original matrix
+        ret.push_back(nums[spiralPos[0]][spiralPos[1]]);
+    }
+    return ret;
+}
+
+int main() {
+    auto ret = checkElement({
+        {1, 4, 5},
+        {2, 3, 9},
+        {6, 8, 7}
+    }, {3, 6, 7, 8, 2});
+    for (int x: ret) cout << x << " ";
+}

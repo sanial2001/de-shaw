@@ -1,0 +1,19 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    string s;
+    cin >> s;
+    vector<int> prefix(s.length() + 1, 0);
+    int m = 1;
+    for(int i = 1; i <= s.length(); i++){
+        prefix[i] = prefix[i - 1] * 10 + m;
+        m *= 9;
+    }
+    int res = 0;
+    for(int i = 0; i < s.length(); i++){
+        res = res + prefix[s.length() - 1 - i] * (s[i] - '0') + (s[i] - '0' > 4 ? prefix[s.length() - 1 - i + 1] - prefix[s.length() - 1 - i] * 10: 0);
+    }
+    cout << stoi(s) - res << endl;
+    return 0;
+}

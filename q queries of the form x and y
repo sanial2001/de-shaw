@@ -1,0 +1,21 @@
+Given two arrays A and B of size n. We are given q queries of the form x y.
+The answer to a given query is (A[ i ]+B[ i ]) where A[ i ] >=x && B[ i ] >=y && (A[ i ] +B[ i ]) is minimum for 0=< i < n.If answer for a query is not possible then print -1 for that query.
+
+1=< n,q <= 10^5
+1=< A[i],B[i] <=10^9
+Eg-
+n=5 q=4
+6 4 8 9 15
+7 7 2 9 6
+4 6 -> 11(4,7)
+2 8 -> 18(9,9)
+14 9 -> -1
+7 1 -> 10(8,2)
+
+solution :
+def min_sum(arr1, arr2, x, y):
+    min_sum = float('inf')
+    for i in range(len(arr1)):
+        if arr1[i] >= x and arr2[i] >= y:
+            min_sum = min(min_sum, arr1[i] + arr2[i])
+    return min_sum if min_sum != float('inf') else -1

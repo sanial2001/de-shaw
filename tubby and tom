@@ -1,0 +1,17 @@
+import collections
+
+
+def solve(pair, a, b):
+    graph = collections.defaultdict(list)
+    for u, v in pair:
+        graph[u].append(v)
+        graph[v].append(u)
+
+    q = [(a, 0), (b, 0)]
+    visit = set()
+    visit.add((a, 0))
+    visit.add((b, 0))
+    while q:
+        num = len(q)
+        for i in range(num):
+            

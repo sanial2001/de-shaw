@@ -1,0 +1,90 @@
+Easy and Optimised binary search approach
+
+Time Complexity - O(n*log(n))
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<long long int> fib;
+void generate_fib()
+{
+    fib.push_back(1);
+    fib.push_back(1);
+    int c=2;
+
+    while(1)
+    {
+        long long int i=fib[c-1]+fib[c-2];
+
+        if(i>1000000000)
+            break;
+
+        fib.push_back(i);
+        c++;
+    }
+}
+
+int main()
+{
+    generate_fib();
+    int t;
+    cin>>t;
+
+    while(t--)
+    {
+        long long int k;
+        cin>>k;
+
+        int s=0,e=fib.size()-1,pos=-1;
+        while(s<=e)
+        {
+            int mid=s+((e-s)>>1);
+
+            if(fib[mid]>k)
+                e=mid-1;
+            else
+            {
+                pos=mid;
+                s=mid+1;
+            }
+        }
+
+        int ans=0;
+        s=0,e=pos,pos=-1;
+
+        while(k>0)
+        {
+            while(s<=e)
+            {
+                int mid=s+((e-s)>>1);
+
+                if(fib[mid]>k)
+                    e=mid-1;
+
+                else
+                {
+                    pos=mid;
+                    s=mid+1;
+                }
+            }
+
+            ans++;
+            k=k-fib[pos];
+            e=pos;
+        }
+
+        cout<<ans<<"\n";
+    }
+}
+
+Python :
+def findMinimumSteps(tc):
+  fib, cnt = [1, 1], [0] * len(tc)
+  for i, k in sorted(enumerate(tc), key=operator.itemgetter(1)):
+    while (num := fib[-1] + fib[-2]) <= k:
+      fib.append(num)
+    hi = len(fib)
+    while k:
+      hi = bisect.bisect(fib, k, hi=hi) - 1
+      k -= fib[hi]
+      cnt[i] += 1
+    return cnt
